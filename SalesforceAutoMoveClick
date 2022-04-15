@@ -1,0 +1,49 @@
+#Packages
+import requests
+import urllib.request
+import time
+import pandas as pd
+import numpy as np
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.keys import Keys
+import time
+from urllib.request import urlopen
+import re
+
+#Web driver & making sure I can open upsite
+driver = webdriver.Chrome(executable_path='/Users/jona.gonzalez/Documents/Python Projects/chromedriver')
+url = "https://leagueapps.lightning.force.com/lightning/o/Report/home?queryScope=everything"
+driver.get(url)
+
+#Making sure I can see the HTML Code
+html = urlopen(url)
+soup = BeautifulSoup(html, 'lxml')
+soup.prettify()
+
+#Final Loop
+bpath1 = "//tbody/tr["
+bpath2 = "]/td[6]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-primitive-cell-actions[1]"
+mpath2 = "]/td[6]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-primitive-cell-actions[1]/lightning-button-menu[1]/div[1]/div[1]/slot[1]/lightning-menu-item[9]/a[1]"
+
+for x in range(3,500):
+    button = driver.find_element_by_xpath(bpath1 + str(x) + bpath2)
+    button.click()
+    time.sleep(2)
+    try:
+        movebutton = driver.find_element_by_xpath(bpath1 + str(x) + mpath2)
+    except:
+        movebutton = driver.find_element_by_xpath("//span[contains(text(),'Move')]")
+        
+    movebutton.click()
+    time.sleep(2)
+    zreport = driver.find_element_by_xpath("//button[contains(text(),'1z - Reports to Retire')]")
+    zreport.click()
+    time.sleep(2)
+    selectfolder = driver.find_element_by_xpath("//button[contains(text(),'Select Folder')]")
+    selectfolder.click()
+    time.sleep(2)
